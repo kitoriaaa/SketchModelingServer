@@ -1,0 +1,7 @@
+numpy==1.16.4
+opencv-python
+plyfile
+scipy
+tensorflow==1.0.1
+Flask
+requests
