@@ -20,12 +20,15 @@ class Hololens():
     def upload(self, dirpath, filename):
         upload_file = os.path.join(dirpath, filename)
         header = {"Content-Type" : "multipart/form-data"}
-        payload = {'knownfolderid': '3D Objects', 'packagefullname': '\\', 'path': '\\'}
+        payload = {'knownfolderid': 'LocalAppData', 
+                   'packagefullname': 'Template3D_1.0.0.0_arm__pzq3xp76mxafg', 
+                   'path': '/LocalState'}
 
         file_binary = open(upload_file, 'rb')
-        file = {'file': (filename, file_binary, '3d/obj')}
+        file = {'file': (filename, file_binary, 'AssetBundle')}
         res = requests.post(
-                self.url, params=payload, 
+                self.url, 
+                params=payload, 
                 files = file, 
                 auth=(self.username, self.password))
 
@@ -37,8 +40,9 @@ if __name__ == "__main__":
     config = configparser.ConfigParser()
     config.read('config.ini')
     holo_conf = config['HoloLens']
+    upload = config['Upload']
     
     hololens = Hololens(
         holo_conf['username'], holo_conf['password'], holo_conf['ipaddress'])
     
-    hololens.upload(r"./Media/Ply", "mesh.obj")
+    hololens.upload(upload['directory'], upload['filename'])
