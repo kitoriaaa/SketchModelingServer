@@ -27,6 +27,13 @@ cmd2 = "python main.py --test --data_dir ../../../Media/Uploads/Chair/ --train_d
 cmd3 = "bash ReconstructMesh.sh"
 cmd4 = "python ply2obj.py ply_path Media/Ply/p1/mesh.ply"
 
+# copy file
+cmd5 = 'copy \"Media\Ply\p1\mesh.obj\" ' + '\"' + unity['projectPath'] + '/Assets/AssetBundleResources/Object/mesh.obj\" /V /Y'
+print(cmd5.split())
+
+# AssetBundle Build command
+buildAssetBundle = unity['UnityPath'] + " -batchmode -quit -logFile ./build.log -projectPath " + unity['projectPath'] + " -executeMethod " + unity['methodName']
+
 app.config['UPLOAD_FOLDER'] = './Media/Uploads/Chair/sketch/p1'
 app.config['OUTPUT_FOLDER'] = "./Media/Output"
 
@@ -64,6 +71,11 @@ def upload_files():
         os.chdir("../../../../../")
         subprocess.call(cmd4.split())
 
+        #TODO: objファイルをUnityプロジェクトのAssetBundleResourcesに移動する　失敗中
+        subprocess.call(cmd5.split(), shell=True)
+
+        # build AssetBundle
+        subprocess.call(shlex.split(buildAssetBundle))
         # AssetBundle send hololens
         hololens2.upload(upload['directory'], upload['filename'])
 
