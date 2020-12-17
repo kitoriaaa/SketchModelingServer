@@ -22,14 +22,11 @@ unity = config['Unity']
 hololens2 = hololens.Hololens(
     holo_conf['username'], holo_conf['password'], holo_conf['ipaddress'])
 
+
 cmd1 = "python rgb2grayscale.py ./Media/Uploads/Chair/sketch/p1"
 cmd2 = "python main.py --test --data_dir ../../../Media/Uploads/Chair/ --train_dir ../Checkpoint/Chair/ --test_dir ../../../Media/Output --sketch_views FS"
 cmd3 = "bash ReconstructMesh.sh"
 cmd4 = "python ply2obj.py ply_path Media/Ply/p1/mesh.ply"
-
-# copy file
-cmd5 = 'copy \"Media\Ply\p1\mesh.obj\" ' + '\"' + unity['projectPath'] + '/Assets/AssetBundleResources/Object/mesh.obj\" /V /Y'
-print(cmd5.split())
 
 # AssetBundle Build command
 buildAssetBundle = unity['UnityPath'] + " -batchmode -quit -logFile ./build.log -projectPath " + unity['projectPath'] + " -executeMethod " + unity['methodName']
@@ -71,8 +68,8 @@ def upload_files():
         os.chdir("../../../../../")
         subprocess.call(cmd4.split())
 
-        #TODO: objファイルをUnityプロジェクトのAssetBundleResourcesに移動する　失敗中
-        subprocess.call(cmd5.split(), shell=True)
+        # copy obj file to Unity AssetBundleResources folder
+        shutil.copy2("Media\Ply\p1\mesh.obj", unity['projectPath']+unity['AssetBundleResources'])
 
         # build AssetBundle
         subprocess.call(shlex.split(buildAssetBundle))
@@ -80,8 +77,10 @@ def upload_files():
         hololens2.upload(upload['directory'], upload['filename'])
 
         # Delete Upload image directory and normal,depth map
-        shutil.rmtree(app.config['UPLOAD_FOLDER'])
-        shutil.rmtree("Media/Output")
+        if os.path.exists(app.config['UPLOAD_FOLDER']):
+            shutil.rmtree(app.config['UPLOAD_FOLDER'])
+        if os.path.exists(app.config['OUTPUT_FOLDER']):
+            shutil.rmtree(app.config['OUTPUT_FOLDER'])
 
         # return mesh file
         return send_file(filename_or_fp="Media/Ply/p1/mesh.obj", as_attachment=True)
