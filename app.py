@@ -6,8 +6,8 @@ from datetime import datetime
 import subprocess
 import shutil
 import configparser
-import hololens
 import shlex
+from modules import hololens
 
 
 app = Flask(__name__)
