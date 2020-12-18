@@ -59,7 +59,7 @@ def upload_files():
 
         # rgb2grayscale
         app.logger.info("convert rgb2grayscale")
-        rgb2grayscale.rgb2grayscale(app.config['UPLOAD_FOLDER'])
+        rgb2grayscale.convert(app.config['UPLOAD_FOLDER'])
 
         # calc depth and normal map
         os.chdir("Network/code/MonsterNet")

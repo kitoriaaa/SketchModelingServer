@@ -4,18 +4,17 @@ python rgb2grayscale.py <DirectoryPath>(.\Sketch\sketch1)
 """
 
 import cv2
-import numpy as np
 import glob
 import argparse
-import os
 
 # Hyper parameters
 hyper_params = {
     'directory': ''
 }
 
+
 # rgb png image to grayscale
-def rgb2grayscale(directory_path):
+def convert(directory_path):
     img_list = glob.glob(directory_path+"*.png")
     for img in img_list:
         im = cv2.imread(img)
@@ -24,7 +23,7 @@ def rgb2grayscale(directory_path):
         cv2.imwrite(img, im_gray)
 
 
-if __name__ == "__main__":
+def main():
     # parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('image_dir', help='RGB image directory', type=str)
@@ -32,5 +31,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     hyper_params['directory'] = args.image_dir
 
+    convert(hyper_params['directory'])
 
-    rgb2grayscale(hyper_params['directory'])
+
+if __name__ == "__main__":
+    main()
