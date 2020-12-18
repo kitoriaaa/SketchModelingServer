@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response, jsonify, redirect, url_for, send_file
+from flask import Flask, request, make_response, jsonify, redirect, url_for, send_file, render_template
 import os
 import sys
 import werkzeug
@@ -8,6 +8,7 @@ import shutil
 import configparser
 import shlex
 from modules import hololens
+from modules import rgb2grayscale
 
 
 app = Flask(__name__)
@@ -31,7 +32,7 @@ cmd4 = "python ply2obj.py ply_path Media/Ply/p1/mesh.ply"
 # AssetBundle Build command
 buildAssetBundle = unity['UnityPath'] + " -batchmode -quit -logFile ./build.log -projectPath " + unity['projectPath'] + " -executeMethod " + unity['methodName']
 
-app.config['UPLOAD_FOLDER'] = './Media/Uploads/Chair/sketch/p1'
+app.config['UPLOAD_FOLDER'] = '../Media/Uploads/Chair/sketch/p1'
 app.config['OUTPUT_FOLDER'] = "./Media/Output"
 
 @app.route('/', methods=['GET', 'POST'])
@@ -56,7 +57,8 @@ def upload_files():
         print("exsists : {}".format(os.path.exists(app.config['UPLOAD_FOLDER'])))
 
         # rgb2grayscale
-        subprocess.call(cmd1.split())
+        # subprocess.call(cmd1.split())
+        # TODO: rgb2grayscaleをモジュール読み込みで行う
 
         # calc depth and normal map
         os.chdir("Network/code/MonsterNet")
@@ -84,23 +86,8 @@ def upload_files():
 
         # return mesh file
         return send_file(filename_or_fp="Media/Ply/p1/mesh.obj", as_attachment=True)
-
-    return '''
-    <!DOCTYPE html>
-        <head>
-            <metadata charset="UTF-8">
-            <title> 3Dオブジェクト生成 </title>
-        </head> 
-        <body>
-            <h1> スケッチ画像2枚を選択してアップロードしてください。オブジェクトを生成します。 </h1>
-            <form method=post enctype=multipart/form-data>
-                <p><input type=file name=file multiple='multiple'>
-                <input type=submit value=Upload>
-            </form>
-        <body>
-    </html>
-    '''
-
+    
+    return render_template("index.html")
 
 
 if __name__ == "__main__":
