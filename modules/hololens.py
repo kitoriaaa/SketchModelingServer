@@ -38,7 +38,7 @@ class Hololens():
 
 if __name__ == "__main__":
     config = configparser.ConfigParser()
-    config.read('config.ini')
+    config.read('../config.ini')
     holo_conf = config['HoloLens']
     upload = config['Upload']
     

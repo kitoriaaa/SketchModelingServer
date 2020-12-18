@@ -31,7 +31,7 @@ cmd3 = "bash ReconstructMesh.sh"
 # AssetBundle Build command
 buildAssetBundle = unity['UnityPath'] + " -batchmode -quit -logFile ./build.log -projectPath " + unity['projectPath'] + " -executeMethod " + unity['methodName']
 
-app.config['UPLOAD_FOLDER'] = '../Media/Uploads/Chair/sketch/p1'
+app.config['UPLOAD_FOLDER'] = './Media/Uploads/Chair/sketch/p1'
 app.config['OUTPUT_FOLDER'] = "./Media/Output"
 app.config['PLY_FOLDER'] = "./Media/Ply/p1/mesh.ply"
 
