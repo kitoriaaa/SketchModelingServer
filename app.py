@@ -9,6 +9,7 @@ import configparser
 import shlex
 from modules import hololens
 from modules import rgb2grayscale
+from modules import ply2obj
 
 
 app = Flask(__name__)
@@ -26,13 +27,13 @@ hololens2 = hololens.Hololens(
 
 cmd2 = "python main.py --test --data_dir ../../../Media/Uploads/Chair/ --train_dir ../Checkpoint/Chair/ --test_dir ../../../Media/Output --sketch_views FS"
 cmd3 = "bash ReconstructMesh.sh"
-cmd4 = "python ply2obj.py ply_path Media/Ply/p1/mesh.ply"
 
 # AssetBundle Build command
 buildAssetBundle = unity['UnityPath'] + " -batchmode -quit -logFile ./build.log -projectPath " + unity['projectPath'] + " -executeMethod " + unity['methodName']
 
 app.config['UPLOAD_FOLDER'] = '../Media/Uploads/Chair/sketch/p1'
 app.config['OUTPUT_FOLDER'] = "./Media/Output"
+app.config['PLY_FOLDER'] = "./Media/Ply/p1/mesh.ply"
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -57,6 +58,7 @@ def upload_files():
         print("exsists : {}".format(os.path.exists(app.config['UPLOAD_FOLDER'])))
 
         # rgb2grayscale
+        app.logger.info("convert rgb2grayscale")
         rgb2grayscale.rgb2grayscale(app.config['UPLOAD_FOLDER'])
 
         # calc depth and normal map
@@ -67,14 +69,17 @@ def upload_files():
         subprocess.call(cmd3.split(), shell=True)
         # ply2obj
         os.chdir("../../../../../")
-        subprocess.call(cmd4.split())
+        ply2obj.convert(app.config['PLY_FOLDER'])
 
         # copy obj file to Unity AssetBundleResources folder
         shutil.copy2("Media\Ply\p1\mesh.obj", unity['projectPath']+unity['AssetBundleResources'])
 
         # build AssetBundle
+        app.logger.info("Build AssetBundle...")
         subprocess.call(shlex.split(buildAssetBundle))
+
         # AssetBundle send hololens
+        app.logger.info("Upload HoloLens...")
         hololens2.upload(upload['directory'], upload['filename'])
 
         # Delete Upload image directory and normal,depth map
