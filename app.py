@@ -24,7 +24,6 @@ hololens2 = hololens.Hololens(
     holo_conf['username'], holo_conf['password'], holo_conf['ipaddress'])
 
 
-cmd1 = "python rgb2grayscale.py ./Media/Uploads/Chair/sketch/p1"
 cmd2 = "python main.py --test --data_dir ../../../Media/Uploads/Chair/ --train_dir ../Checkpoint/Chair/ --test_dir ../../../Media/Output --sketch_views FS"
 cmd3 = "bash ReconstructMesh.sh"
 cmd4 = "python ply2obj.py ply_path Media/Ply/p1/mesh.ply"
@@ -34,6 +33,7 @@ buildAssetBundle = unity['UnityPath'] + " -batchmode -quit -logFile ./build.log 
 
 app.config['UPLOAD_FOLDER'] = '../Media/Uploads/Chair/sketch/p1'
 app.config['OUTPUT_FOLDER'] = "./Media/Output"
+
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_files():
@@ -57,8 +57,7 @@ def upload_files():
         print("exsists : {}".format(os.path.exists(app.config['UPLOAD_FOLDER'])))
 
         # rgb2grayscale
-        # subprocess.call(cmd1.split())
-        # TODO: rgb2grayscaleをモジュール読み込みで行う
+        rgb2grayscale.rgb2grayscale(app.config['UPLOAD_FOLDER'])
 
         # calc depth and normal map
         os.chdir("Network/code/MonsterNet")

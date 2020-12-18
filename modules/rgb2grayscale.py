@@ -16,11 +16,10 @@ hyper_params = {
 
 # rgb png image to grayscale
 def rgb2grayscale(directory_path):
-    os.chdir(directory_path)
-    img_list = glob.glob("*.png")
+    img_list = glob.glob(directory_path+"*.png")
     for img in img_list:
         im = cv2.imread(img)
-        im = cv2.resize(im, (256, 256))
+        im = cv2.resize(im, (256, 256)) # Resize 256x256
         im_gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         cv2.imwrite(img, im_gray)
 
