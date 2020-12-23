@@ -7,8 +7,17 @@
     <body>
         <h1> スケッチ画像2枚を選択してアップロードしてください。オブジェクトを生成します。 </h1>
         <form method=post enctype=multipart/form-data>
-            <p><input type=file name=file multiple='multiple'>
-            <input type=submit value=Upload>
+            <p>
+                形状選択:<select name="obj-type">
+                <option value="plane">飛行機</option>
+                <option value="chair">椅子</option>
+                <option value="character">キャラクター</option>
+                </select>
+            </p>
+            <p>
+                <input type=file name=file multiple='multiple'>
+                <input type=submit value=Upload>
+            </p>
         </form>
     </body>
 </html>

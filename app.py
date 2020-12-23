@@ -48,10 +48,12 @@ def upload_files():
         # if os.path.exists("Media/Ply"):
         #     shutil.rmtree("Media/Ply")
 
+        object_type = request.form["obj-type"]
+        print(object_type)
         upload_files = request.files.getlist('file')
         for file in upload_files:
             if file.filename == "":
-                return redirect(requst.url)
+                return redirect(request.url)
             file_name = file.filename
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
 
