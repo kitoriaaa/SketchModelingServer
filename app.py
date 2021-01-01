@@ -45,19 +45,18 @@ def upload_files():
 
         os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-        # if os.path.exists("Media/Ply"):
-        #     shutil.rmtree("Media/Ply")
+        if os.path.exists("Media/Ply"):
+            shutil.rmtree("Media/Ply")
 
         object_type = request.form["obj-type"]
         print(object_type)
         upload_files = request.files.getlist('file')
         for file in upload_files:
             if file.filename == "":
+                #TODO: return message (ex) Please choose images
                 return redirect(request.url)
             file_name = file.filename
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
-
-        print("exsists : {}".format(os.path.exists(app.config['UPLOAD_FOLDER'])))
 
         # rgb2grayscale
         app.logger.info("convert rgb2grayscale")
@@ -74,18 +73,34 @@ def upload_files():
         ply2obj.convert(app.config['PLY_FOLDER'])
 
         # copy obj file to Unity AssetBundleResources folder
-        shutil.copy2("Media\Ply\p1\mesh.obj", unity['projectPath']+unity['AssetBundleResources'])
+        try:
+            shutil.copy2("Media\Ply\p1\mesh.obj", unity['projectPath'] + unity['AssetBundleResources'])
+        except FileNotFoundError as e:
+            app.logger.error("Failed to copy obj file to AssetBundleResouces: %s", e)
+        except Exception as e:
+            app.logger.error("Failed to copy obj file to AssetBundleResouces: %s", e)
 
         # build AssetBundle
-        app.logger.info("Build AssetBundle...")
-        subprocess.call(shlex.split(buildAssetBundle))
+        try:
+            app.logger.info("Build AssetBundle...")
+            subprocess.call(shlex.split(buildAssetBundle))
+            app.logger.info("Finish: Build AssetBundle")
+        except FileNotFoundError as e:
+            app.logger.error("Failed to build AssetBundle: %s", e)
+        except Exception as e:
+            app.logger.error("Failed to build AssetBundle: %s", e)
+
 
         # AssetBundle send hololens
-        app.logger.info("Upload HoloLens...")
         try:
+            app.logger.info("Upload HoloLens...")
             hololens2.upload(upload['directory'], upload['filename'])
-        except Exception:
-            print('Connection failed to HoloLens')
+            app.logger.info("Finished: Upload HoloLens")
+        except FileNotFoundError as e:
+            app.logger.error("Failed to send AssetBundle to HoloLens: %s", e)
+        except Exception as e:
+            app.logger.error("Failed to send AssetBundle to HoloLens: %s", e)
+
 
         # Delete Upload image directory and normal,depth map
         if os.path.exists(app.config['UPLOAD_FOLDER']):
