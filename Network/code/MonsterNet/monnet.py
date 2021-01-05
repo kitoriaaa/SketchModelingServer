@@ -28,13 +28,13 @@ import time
 import os
 import math
 
-import data
-import image
-import network
-import layer
-import loss
-import reproject as rp
-import view as vw
+from . import data
+from . import image
+from . import network
+from . import layer
+from . import loss
+from . import reproject as rp
+from . import view as vw
 
 class MonNet(object):
 

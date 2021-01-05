@@ -25,8 +25,8 @@ import numpy as np
 import os
 import math
 
-import image
-import view as vw
+from . import image
+from . import view as vw
 
 NUM_CORRESPONDENCES = 1024
 

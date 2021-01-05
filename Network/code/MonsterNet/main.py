@@ -24,9 +24,9 @@ import tensorflow as tf
 import time
 import os
 
-import data
-import monnet as mn
-import view as vw
+from . import data
+from . import monnet as mn
+from . import view as vw
 
 FLAGS = tf.app.flags.FLAGS
 

@@ -22,9 +22,9 @@
 import tensorflow as tf
 import numpy as np
 
-import image
-import reproject as rp
-import view as vw
+from . import image
+from . import reproject as rp
+from . import view as vw
 
 def compute_depth_loss(predicts, targets, mask, normalized=True):
 	"""

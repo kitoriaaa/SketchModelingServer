@@ -24,8 +24,8 @@ import numpy as np
 
 import tensorflow.contrib.layers as tf_layers
 
-import layer
-import image
+from . import layer
+from . import image
 
 def generateUNet(images, num_output_views, num_output_channels):
 	"""
