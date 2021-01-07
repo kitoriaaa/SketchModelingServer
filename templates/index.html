@@ -5,19 +5,26 @@
         <title> 3Dオブジェクト生成 </title>
     </head> 
     <body>
-        <h1> スケッチ画像2枚を選択してアップロードしてください。オブジェクトを生成します。 </h1>
+        <h1>Sketch based Modeling Server</h1>
+        <p>スケッチ画像2枚を選択してアップロードしてください。オブジェクトを生成します。</p>
         <form method=post enctype=multipart/form-data>
+            <p>生成する形状を選択してください</p>
+            <ul class="select-obj" style="list-style: none;">
+                <li>
+                    <label><input type="radio" name="obj-type" value="chair" checked>椅子</label>
+                </li>
+                <li>
+                    <label><input type="radio" name="obj-type" value="plane" >飛行機</label>
+                </li>
+                <li>
+                    <label><input type="radio" name="obj-type" value="character">キャラクター</label>
+                </li>
+            </ul>
             <p>
-                形状選択:<select name="obj-type">
-                <option value="plane">飛行機</option>
-                <option value="chair">椅子</option>
-                <option value="character">キャラクター</option>
-                </select>
+                <label for="sketch_file">スケッチ画像を選択してください</label><br>
+                <input type=file name=file multiple='multiple' id="sketch_file">
             </p>
-            <p>
-                <input type=file name=file multiple='multiple'>
-                <input type=submit value=Upload>
-            </p>
+            <input type=submit value=Upload>
         </form>
     </body>
 </html>
