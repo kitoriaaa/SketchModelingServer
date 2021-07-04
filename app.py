@@ -9,6 +9,8 @@ from modules import hololens
 from modules import rgb2grayscale
 from modules import ply2obj
 from Network.code.MonsterNet import main
+import time
+
 
 app = Flask(__name__)
 
@@ -49,6 +51,7 @@ obj_type_dict = {"plane":"TS", "chair":"FS", "character":"FS"}
 @app.route('/', methods=['GET', 'POST'])
 def upload_files():
     if request.method == 'POST':
+        st = time.time()
         if 'file' not in request.files:
             sys.stderr.write("file not in request.files")
             return make_response(jsonify({'result':'upload files is required'}))
@@ -94,6 +97,8 @@ def upload_files():
         subprocess.call(poisson.split(), shell=True)
         os.chdir("../../../../../")
 
+        app.logger.info("Complete Objct create Time: %s", time.time()-st)
+
         # ply2obj
         ply2obj.convert(app.config['PLY_FOLDER'])
 
@@ -133,6 +138,7 @@ def upload_files():
         if os.path.exists(app.config['OUTPUT_FOLDER']):
             shutil.rmtree(app.config['OUTPUT_FOLDER'])
 
+        app.logger.info("Time: %s", time.time()-st)
         # return mesh file
         return send_file(filename_or_fp="Media/Ply/p1/mesh.ply", as_attachment=True)
     
