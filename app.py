@@ -1,8 +1,6 @@
-from flask import Flask, request, make_response, jsonify, redirect, url_for, send_file, render_template
+from flask import Flask, request, make_response, jsonify, redirect, send_file, render_template
 import os
 import sys
-import werkzeug
-from datetime import datetime
 import subprocess
 import shutil
 import configparser
@@ -58,7 +56,7 @@ def upload_files():
 
         # check obj-type is correct
         object_type = request.form["obj-type"]
-        if (not (object_type in obj_type_dict.keys())):
+        if not (object_type in obj_type_dict.keys()):
             return make_response(jsonify({"result":"obj-type must be plane or chair or character"}))
         app.logger.info("Create object type is: %s", str(object_type))
 
@@ -130,8 +128,8 @@ def upload_files():
 
 
         # Delete Upload image directory and normal,depth map
-        if os.path.exists(app.config['UPLOAD_FOLDER']):
-            shutil.rmtree(app.config['UPLOAD_FOLDER'])
+        # if os.path.exists(app.config['UPLOAD_FOLDER']):
+        #     shutil.rmtree(app.config['UPLOAD_FOLDER'])
         if os.path.exists(app.config['OUTPUT_FOLDER']):
             shutil.rmtree(app.config['OUTPUT_FOLDER'])
 
